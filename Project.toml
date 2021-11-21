@@ -10,7 +10,7 @@ WebSockets = "104b5d7c-a370-577a-8038-80a2059c5097"
 
 [compat]
 julia = "1"
-JSON = "0.2"
+JSON = "0.21.2"
 WebSockets = "1"
 
 [targets]
