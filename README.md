@@ -13,3 +13,4 @@ See tests for example usage.
 ## Contributing
 
 All contributions are welcome, just open a PR!
+As this project grows and matures, I'll come up with interface and style guidelines.
