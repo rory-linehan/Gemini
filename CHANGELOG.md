@@ -1,10 +1,6 @@
-### 0.2.2
-
-* fixing compat for automerge to JuliaRegistries/General
-
 ### 0.2.1
 
-* bumping version
+* fixing compat for automerge to JuliaRegistries/General
 
 ### 0.2.0
 
