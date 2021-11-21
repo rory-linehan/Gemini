@@ -1,6 +1,5 @@
 module Gemini
 
-using HTTP
 using WebSockets
 using JSON
 
@@ -19,7 +18,7 @@ https://docs.gemini.com/websocket-api/#market-data-version-2
 - `names::Array`: data feed name subscriptions (l2, candles_1m,...)
 - `symbols::Array`: symbol subscriptions (BTCUSD,...)
 """
-function marketdata_v2(channel::Channel, names::Vector{String}, symbols::Vector{String})
+function marketdata_v2(channel::Channel{Dict}, names::Vector{String}, symbols::Vector{String})
     if >(length(names), 0) && >(length(symbols), 0)
         msg = Dict(
             "type" => "subscribe",
@@ -40,7 +39,7 @@ function marketdata_v2(channel::Channel, names::Vector{String}, symbols::Vector{
                     while isopen(ws)
                         data, success = readguarded(ws)
                         if success
-                            put!(channel, String(data))
+                            put!(channel, JSON.parse(String(data))::Dict)
                         end
                     end
                 else
