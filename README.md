@@ -10,6 +10,10 @@ Provides an interface to the Gemini API with native Julia types, taking care of 
 
 See tests for example usage.
 
+## Testing
+
+I've opted for a combination of integration and unit tests. Integration tests happen on easy to test public Gemini endpoints. Unit tests are for internal functionality or endpoints that require authentication.
+
 ## Contributing
 
 All contributions are welcome, just open a PR!

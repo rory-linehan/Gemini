@@ -1,3 +1,7 @@
+### 0.1.1
+
+* fixing indentation
+
 ### 0.1.0
 
 * initial release
