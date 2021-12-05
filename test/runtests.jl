@@ -6,4 +6,9 @@ using Test
   @testset "marketdata_v2" begin
     include("marketdata_v2.jl");sleep(1)
   end
+  # manual testing for now, until I can mock up an HTTP server to return dummy requests.
+  # printstyled(color=:blue, "orders\n")
+  # @testset "orders" begin
+  #   include("orders.jl");sleep(1)
+  # end
 end

@@ -1,8 +1,8 @@
-# Gemini API client for Julia
+# Gemini API wrapper for Julia
 
 ## Overview
 
-Provides an interface to the Gemini API with native Julia types, taking care of the heavy lifting for integrating your application. Currently fairly feature-sparse, but I'm building this as you read. Stay tuned!
+Provides a wrapper to the Gemini API with native Julia types, taking care of the heavy lifting for integrating your application. Currently fairly feature-sparse, but I'm building this as you read. Stay tuned!
 
 ## Usage
 
@@ -10,11 +10,7 @@ Provides an interface to the Gemini API with native Julia types, taking care of 
 
 See tests for example usage.
 
-## Testing
+## Implementation Notes
 
-I've opted for a combination of integration and unit tests. Integration tests happen on easy to test public Gemini endpoints. Unit tests are for internal functionality or endpoints that require authentication.
-
-## Contributing
-
-All contributions are welcome, just open a PR!
-As this project grows and matures, I'll come up with interface and style guidelines.
+* Master API keys are not supported at this time, make sure you use a Primary key.
+  This also means that subaccounts are not supported.
