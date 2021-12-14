@@ -94,7 +94,7 @@ https://docs.gemini.com/rest-api/#new-order
 - `amount::String`: Quoted decimal amount to purchase
 - `price::String`: Quoted decimal amount to spend per unit
 - `type::String`: The order type. "exchange limit" for all order types except for stop-limit orders. "exchange stop limit" for stop-limit orders.
-- `options::Array`:	Optional. An optional array containing at most one supported order execution option.
+- `options::Vector{String}`:	Optional. An optional array containing at most one supported order execution option.
 - `stop_price::String`: Optional. The price to trigger a stop-limit order. Only available for stop-limit orders.
 """
 function new_order(sandbox::Bool, api_key::String, api_secret::String, side::String, symbol::String, amount::String, price::String, type::String, options::Vector{String}=Vector{String,1}(), stop_price::String="")
@@ -128,7 +128,8 @@ function new_order(sandbox::Bool, api_key::String, api_secret::String, side::Str
   response = HTTP.post(
     url,
     request_headers,
-    nothing
+    nothing,
+    retry = false
   )
   return JSON.parse(String(response.body))
 end
@@ -169,7 +170,8 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
   response = HTTP.post(
     url,
     request_headers,
-    nothing
+    nothing,
+    retry = false
   )
   return JSON.parse(String(response.body))
 end

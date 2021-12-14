@@ -1,3 +1,7 @@
+### 0.3.1
+
+* turning off default retry
+
 ### 0.3.0
 
 * adding order_events() placeholder
