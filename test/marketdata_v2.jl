@@ -8,7 +8,6 @@
     ["BTCUSD"]
   )
   for _ in 1:5
-    wait(channel)
     data = take!(channel)
     println("received data...")
   end

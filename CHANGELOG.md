@@ -1,3 +1,8 @@
+### 0.3.0
+
+* adding order_events() placeholder
+* fixing options parameter type for new_order to Vector{String}
+
 ### 0.2.0
 
 * adding new_order()

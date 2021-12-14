@@ -24,7 +24,7 @@ https://docs.gemini.com/websocket-api/#market-data-version-2
 - `names::Vector`: data feed name subscriptions (l2, candles_1m,...)
 - `symbols::Vector`: symbol subscriptions (BTCUSD,...)
 """
-function marketdata_v2(sandbox::Bool, channel::Channel{Dict}, names::Vector, symbols::Vector)
+function marketdata_v2(sandbox::Bool, channel::Channel{Dict}, names::Vector, symbols::Vector)::GeminiResponse
   if >(length(names), 0) && >(length(symbols), 0)
     if sandbox
       base_url = "wss://api.sandbox.gemini.com"
@@ -97,7 +97,7 @@ https://docs.gemini.com/rest-api/#new-order
 - `options::Array`:	Optional. An optional array containing at most one supported order execution option.
 - `stop_price::String`: Optional. The price to trigger a stop-limit order. Only available for stop-limit orders.
 """
-function new_order(sandbox::Bool, api_key::String, api_secret::String, side::String, symbol::String, amount::String, price::String, type::String, options::Array=Array{String,1}(), stop_price::String="")
+function new_order(sandbox::Bool, api_key::String, api_secret::String, side::String, symbol::String, amount::String, price::String, type::String, options::Vector{String}=Vector{String,1}(), stop_price::String="")
   if sandbox
     url = "https://api.sandbox.gemini.com/v1/order/new"
   else
@@ -172,6 +172,66 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
     nothing
   )
   return JSON.parse(String(response.body))
+end
+
+"""
+Order events is a private API that gives you information about your orders in real time.
+
+https://docs.gemini.com/websocket-api/#order-events
+
+# Arguments:
+- `sandbox::Bool`: Sandbox request
+- `channel::Channel{Dict}`: channel to pass data
+- `names::Vector`: data feed name subscriptions (l2, candles_1m,...)
+- `symbols::Vector`: symbol subscriptions (BTCUSD,...)
+"""
+function order_events(sandbox::Bool, api_key::String, api_secret::String, channel::Channel{Dict})::GeminiResponse
+  if sandbox
+    base_url = "wss://api.sandbox.gemini.com"
+  else
+    base_url = "wss://api.gemini.com"
+  end
+  payload = Dict(
+    "request" => "/v1/order/events",
+    "nonce" => string(Dates.datetime2epochms(Dates.now()))
+  )
+  encoded_payload = encode(JSON.json(payload), "UTF-8")
+  b64 = base64encode(encoded_payload)
+  signature = hexdigest("SHA384", encode(api_secret, "UTF-8"), b64)
+  request_headers = Dict(
+    "Content-Type" => "text/plain",
+    "Content-Length" => "0",
+    "X-GEMINI-APIKEY" => api_key,
+    "X-GEMINI-PAYLOAD" => b64,
+    "X-GEMINI-SIGNATURE" => signature,
+    "Cache-Control" => "no-cache"
+  )
+  WebSockets.open(base_url*"/v1/order/events") do ws
+    if isopen(ws)
+      if writeguarded(ws, JSON.json(msg))
+        while isopen(ws)
+          data, success = readguarded(ws)
+          if success
+            put!(channel, JSON.parse(String(data))::Dict)
+          end
+        end
+      else
+        return GeminiResponse(
+          false,
+          Dict(
+            "error" => "failed to send subscription information to Gemini"
+          )
+        )
+      end
+    else
+      return GeminiResponse(
+        false,
+        Dict(
+          "error" => "failed to open websocket"
+        )
+      )
+    end
+  end
 end
 
 export GeminiResponse
