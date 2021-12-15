@@ -1,3 +1,7 @@
+### 0.4.2
+
+* converting get/post to request
+
 ### 0.4.1
 
 * improved error handling for REST calls

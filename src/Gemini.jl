@@ -125,7 +125,8 @@ function new_order(sandbox::Bool, api_key::String, api_secret::String, side::Str
     "X-GEMINI-SIGNATURE" => signature,
     "Cache-Control" => "no-cache"
   )
-  response = HTTP.post(
+  response = HTTP.request(
+    "POST",
     url,
     request_headers,
     nothing,
@@ -171,7 +172,8 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
     "X-GEMINI-SIGNATURE" => signature,
     "Cache-Control" => "no-cache"
   )
-  response = HTTP.post(
+  response = HTTP.request(
+    "POST",
     url,
     request_headers,
     nothing,
@@ -198,7 +200,7 @@ function symbols(sandbox::Bool)
   else
     url = "https://api.gemini.com/v1/symbols"
   end
-  response = HTTP.get(url)
+  response = HTTP.request("GET", url)
   if ==(response.status, 200)
     return JSON.parse(String(response.body))
   else
@@ -221,7 +223,7 @@ function symbol_details(sandbox::Bool, symbol::String)
   else
     url = "https://api.gemini.com/v1/symbols/details/"
   end
-  response = HTTP.get(url*symbol)
+  response = HTTP.request("GET", url*symbol)
   if ==(response.status, 200)
     return JSON.parse(String(response.body))
   else
