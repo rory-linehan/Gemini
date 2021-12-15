@@ -177,6 +177,43 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
 end
 
 """
+This endpoint retrieves all available symbols for trading
+
+https://docs.gemini.com/rest-api/#symbols
+
+# Arguments:
+- `sandbox::Bool`: Sandbox request
+"""
+function symbols(sandbox::Bool)
+  if sandbox
+    url = "https://api.sandbox.gemini.com/v1/symbols"
+  else
+    url = "https://api.gemini.com/v1/symbols"
+  end
+  response = HTTP.get(url)
+  return JSON.parse(String(response.body))
+end
+
+"""
+This endpoint retrieves extra detail on supported symbols, such as minimum order size, tick size, quote increment and more.
+
+https://docs.gemini.com/rest-api/#symbol-details
+
+# Arguments:
+- `sandbox::Bool`: Sandbox request
+- `symbol::String`: Trading pair symbol
+"""
+function symbol_details(sandbox::Bool, symbol::String)
+  if sandbox
+    url = "https://api.sandbox.gemini.com/v1/symbols/details/"
+  else
+    url = "https://api.gemini.com/v1/symbols/details/"
+  end
+  response = HTTP.get(url*symbol)
+  return JSON.parse(String(response.body))
+end
+
+"""
 Order events is a private API that gives you information about your orders in real time.
 
 https://docs.gemini.com/websocket-api/#order-events
@@ -187,6 +224,7 @@ https://docs.gemini.com/websocket-api/#order-events
 - `names::Vector`: data feed name subscriptions (l2, candles_1m,...)
 - `symbols::Vector`: symbol subscriptions (BTCUSD,...)
 """
+#=
 function order_events(sandbox::Bool, api_key::String, api_secret::String, channel::Channel{Dict})::GeminiResponse
   if sandbox
     base_url = "wss://api.sandbox.gemini.com"
@@ -235,10 +273,13 @@ function order_events(sandbox::Bool, api_key::String, api_secret::String, channe
     end
   end
 end
+=#
 
 export GeminiResponse
 export marketdata_v2
 export new_order
 export cancel_order
+export symbols
+export symbol_details
 
 end # module

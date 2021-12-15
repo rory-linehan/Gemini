@@ -1,3 +1,8 @@
+### 0.4.0
+
+* adding symbols()
+* adding symbol_details()
+
 ### 0.3.1
 
 * turning off default retry
