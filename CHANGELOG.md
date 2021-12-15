@@ -1,3 +1,7 @@
+### 0.4.1
+
+* improved error handling for REST calls
+
 ### 0.4.0
 
 * adding symbols()

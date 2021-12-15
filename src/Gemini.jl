@@ -131,7 +131,11 @@ function new_order(sandbox::Bool, api_key::String, api_secret::String, side::Str
     nothing,
     retry = false
   )
-  return JSON.parse(String(response.body))
+  if ==(response.status, 200)
+    return JSON.parse(String(response.body))
+  else
+    return response
+  end
 end
 
 """
@@ -173,7 +177,11 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
     nothing,
     retry = false
   )
-  return JSON.parse(String(response.body))
+  if ==(response.status, 200)
+    return JSON.parse(String(response.body))
+  else
+    return response
+  end
 end
 
 """
@@ -191,7 +199,11 @@ function symbols(sandbox::Bool)
     url = "https://api.gemini.com/v1/symbols"
   end
   response = HTTP.get(url)
-  return JSON.parse(String(response.body))
+  if ==(response.status, 200)
+    return JSON.parse(String(response.body))
+  else
+    return response
+  end
 end
 
 """
@@ -210,7 +222,11 @@ function symbol_details(sandbox::Bool, symbol::String)
     url = "https://api.gemini.com/v1/symbols/details/"
   end
   response = HTTP.get(url*symbol)
-  return JSON.parse(String(response.body))
+  if ==(response.status, 200)
+    return JSON.parse(String(response.body))
+  else
+    return response
+  end
 end
 
 """
