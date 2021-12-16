@@ -1,3 +1,7 @@
+### 0.5.0
+
+* more error handling improvement, standardizing return interface
+
 ### 0.4.2
 
 * converting get/post to request

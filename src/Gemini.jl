@@ -9,8 +9,8 @@ using HTTP
 using StringEncodings
 
 struct GeminiResponse
-  status::Bool
-  body::Dict
+  status
+  response
 end
 
 """
@@ -54,29 +54,14 @@ function marketdata_v2(sandbox::Bool, channel::Channel{Dict}, names::Vector, sym
             end
           end
         else
-          return GeminiResponse(
-            false,
-            Dict(
-              "error" => "failed to send subscription information to Gemini"
-            )
-          )
+          return GeminiResponse(false, Dict("error"=>"failed to send subscription information to Gemini"))
         end
       else
-        return GeminiResponse(
-          false,
-          Dict(
-            "error" => "failed to open websocket"
-          )
-        )
+        return GeminiResponse(false, Dict("error"=>"failed to open websocket"))
       end
     end
   else
-    return GeminiResponse(
-      false,
-      Dict(
-        "error" => "no subscriptions given"
-      )
-    )
+    return GeminiResponse(false, Dict("error"=>"no subscriptions given"))
   end
 end
 
@@ -125,17 +110,23 @@ function new_order(sandbox::Bool, api_key::String, api_secret::String, side::Str
     "X-GEMINI-SIGNATURE" => signature,
     "Cache-Control" => "no-cache"
   )
-  response = HTTP.request(
-    "POST",
-    url,
-    request_headers,
-    nothing,
-    retry = false
-  )
-  if ==(response.status, 200)
-    return JSON.parse(String(response.body))
-  else
-    return response
+  try
+    response = HTTP.request(
+      "POST",
+      url,
+      request_headers,
+      nothing,
+      retry = false
+    )
+    return GeminiResponse(response.status, JSON.parse(String(response.body)))
+  catch err
+    if isa(err, HTTP.ExceptionRequest.StatusError)
+      if ==(err.status, 503)
+        return GeminiResponse(err.status, JSON.parse(String(err.response.body)))
+      else
+        return GeminiResponse(err.status, err.response.body)
+      end
+    end
   end
 end
 
@@ -172,17 +163,23 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
     "X-GEMINI-SIGNATURE" => signature,
     "Cache-Control" => "no-cache"
   )
-  response = HTTP.request(
-    "POST",
-    url,
-    request_headers,
-    nothing,
-    retry = false
-  )
-  if ==(response.status, 200)
-    return JSON.parse(String(response.body))
-  else
-    return response
+  try
+    response = HTTP.request(
+      "POST",
+      url,
+      request_headers,
+      nothing,
+      retry = false
+    )
+    return GeminiResponse(response.status, JSON.parse(String(response.body)))
+  catch err
+    if isa(err, HTTP.ExceptionRequest.StatusError)
+      if ==(err.status, 503)
+        return GeminiResponse(err.status, JSON.parse(String(err.response.body)))
+      else
+        return GeminiResponse(err.status, err.response.body)
+      end
+    end
   end
 end
 
@@ -200,11 +197,17 @@ function symbols(sandbox::Bool)
   else
     url = "https://api.gemini.com/v1/symbols"
   end
-  response = HTTP.request("GET", url)
-  if ==(response.status, 200)
-    return JSON.parse(String(response.body))
-  else
-    return response
+  try
+    response = HTTP.request("GET", url)
+    return GeminiResponse(response.status, JSON.parse(String(response.body)))
+  catch err
+    if isa(err, HTTP.ExceptionRequest.StatusError)
+      if ==(err.status, 503)
+        return GeminiResponse(err.status, JSON.parse(String(err.response.body)))
+      else
+        return GeminiResponse(err.status, err.response.body)
+      end
+    end
   end
 end
 
@@ -223,11 +226,17 @@ function symbol_details(sandbox::Bool, symbol::String)
   else
     url = "https://api.gemini.com/v1/symbols/details/"
   end
-  response = HTTP.request("GET", url*symbol)
-  if ==(response.status, 200)
-    return JSON.parse(String(response.body))
-  else
-    return response
+  try
+    response = HTTP.request("GET", url*symbol)
+    return GeminiResponse(response.status, JSON.parse(String(response.body)))
+  catch err
+    if isa(err, HTTP.ExceptionRequest.StatusError)
+      if ==(err.status, 503)
+        return GeminiResponse(err.status, JSON.parse(String(err.response.body)))
+      else
+        return GeminiResponse(err.status, err.response.body)
+      end
+    end
   end
 end
 
@@ -274,20 +283,10 @@ function order_events(sandbox::Bool, api_key::String, api_secret::String, channe
           end
         end
       else
-        return GeminiResponse(
-          false,
-          Dict(
-            "error" => "failed to send subscription information to Gemini"
-          )
-        )
+        return GeminiResponse(false, Dict("error"=>"failed to send subscription information to Gemini"))
       end
     else
-      return GeminiResponse(
-        false,
-        Dict(
-          "error" => "failed to open websocket"
-        )
-      )
+      return GeminiResponse(false, Dict("error"=>"failed to open websocket"))
     end
   end
 end

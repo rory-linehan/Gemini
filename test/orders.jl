@@ -1,24 +1,28 @@
 @testset "orders" begin
-  api_key = "some_api_key"
-  api_secret = "some_api_secret"
-  response = new_order(
+  api_key = "some-api-key"
+  api_secret = "some-api-secret"
+  r = new_order(
     true,
     api_key,
     api_secret,
     "buy",
     "btcusd",
     "1",
-    "50000.00",
+    "49000.00",
     "exchange limit",
-    ["immediate-or-cancel"]
+    ["fill-or-kill"]
   )
-  println(response)
-  order_id = parse(Int64, response["order_id"])
-  response = cancel_order(
+  println("new_order: ", r.response)
+  if ==(r.status, 200)
+    if ==(r.response["is_cancelled"], false)
+      order_id = parse(Int64, r.response["order_id"])
+    end
+  end
+  r = cancel_order(
     true,
     api_key,
     api_secret,
     order_id
   )
-  println(response)
+  println("cancel_order: ", r.response)
 end
