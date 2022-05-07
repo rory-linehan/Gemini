@@ -114,8 +114,7 @@ function new_order(sandbox::Bool, api_key::String, api_secret::String, side::Str
     response = HTTP.request(
       "POST",
       url,
-      request_headers,
-      nothing,
+      request_headers;
       retry = false
     )
     return GeminiResponse(response.status, JSON.parse(String(response.body)))
@@ -167,8 +166,7 @@ function cancel_order(sandbox::Bool, api_key::String, api_secret::String, order_
     response = HTTP.request(
       "POST",
       url,
-      request_headers,
-      nothing,
+      request_headers;
       retry = false
     )
     return GeminiResponse(response.status, JSON.parse(String(response.body)))

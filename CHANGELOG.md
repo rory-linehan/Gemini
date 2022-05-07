@@ -1,3 +1,7 @@
+### 0.5.1
+
+* fixing/improving tests
+
 ### 0.5.0
 
 * more error handling improvement, standardizing return interface
