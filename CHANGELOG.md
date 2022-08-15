@@ -1,3 +1,7 @@
+### 0.5.2
+
+* update Manifest.toml format
+
 ### 0.5.1
 
 * fixing/improving tests
