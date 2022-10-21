@@ -1,3 +1,7 @@
+### 0.5.3
+
+* added GitHub Actions workflow for running tests and parameterizing secrets
+
 ### 0.5.2
 
 * update Manifest.toml format

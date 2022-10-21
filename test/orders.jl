@@ -1,10 +1,8 @@
 @testset "orders" begin
-  api_key = "some-api-key"
-  api_secret = "some-api-secret"
   r = new_order(
     true,
-    api_key,
-    api_secret,
+    ENV["GEMINI_API_KEY"],
+    ENV["GEMINI_API_SECRET"],
     "buy",
     "btcusd",
     "1",
@@ -18,8 +16,8 @@
       order_id = parse(Int64, r.response["order_id"])
       r = cancel_order(
         true,
-        api_key,
-        api_secret,
+        ENV["GEMINI_API_KEY"],
+        ENV["GEMINI_API_SECRET"],
         order_id
       )
       println(r)
