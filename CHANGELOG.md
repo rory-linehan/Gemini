@@ -1,3 +1,7 @@
+### 0.5.4
+
+* fix package manifest compats
+
 ### 0.5.3
 
 * added GitHub Actions workflow for running tests and parameterizing secrets
