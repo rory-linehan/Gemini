@@ -1,11 +1,10 @@
 module Gemini
 
-using WebSockets
+using WebSockets: HTTP, open, isopen, writeguarded, readguarded
 using JSON
 using Dates
 using Base64
 using Nettle
-using HTTP
 using StringEncodings
 
 struct GeminiResponse
@@ -27,9 +26,9 @@ https://docs.gemini.com/websocket-api/#market-data-version-2
 function marketdata_v2(sandbox::Bool, channel::Channel{Dict}, names::Vector, symbols::Vector)::GeminiResponse
   if >(length(names), 0) && >(length(symbols), 0)
     if sandbox
-      base_url = "wss://api.sandbox.gemini.com"
+      base_url = "ws://api.sandbox.gemini.com"
     else
-      base_url = "wss://api.gemini.com"
+      base_url = "ws://api.gemini.com"
     end
     msg = Dict(
       "type" => "subscribe",
@@ -44,7 +43,7 @@ function marketdata_v2(sandbox::Bool, channel::Channel{Dict}, names::Vector, sym
         )
       )
     end
-    WebSockets.open(base_url*"/v2/marketdata") do ws
+    open(base_url*"/v2/marketdata") do ws
       if isopen(ws)
         if writeguarded(ws, JSON.json(msg))
           while isopen(ws)
@@ -271,7 +270,7 @@ function order_events(sandbox::Bool, api_key::String, api_secret::String, channe
     "X-GEMINI-SIGNATURE" => signature,
     "Cache-Control" => "no-cache"
   )
-  WebSockets.open(base_url*"/v1/order/events") do ws
+  HTTP.WebSockets.open(base_url*"/v1/order/events") do ws
     if isopen(ws)
       if writeguarded(ws, JSON.json(msg))
         while isopen(ws)

@@ -1,6 +1,7 @@
 ### 0.5.4
 
 * update package manifest compats
+* fix HTTP/WebSockets namespace issue
 
 ### 0.5.3
 
