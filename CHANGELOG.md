@@ -1,6 +1,6 @@
 ### 0.5.4
 
-* fix package manifest compats
+* update package manifest compats
 
 ### 0.5.3
 
