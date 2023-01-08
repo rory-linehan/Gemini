@@ -1,3 +1,7 @@
+### 0.5.5
+
+* remove Manifest.toml from git tracking
+
 ### 0.5.4
 
 * update package manifest compats
