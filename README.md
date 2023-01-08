@@ -2,7 +2,7 @@
 
 ## Overview
 
-Provides a wrapper to the Gemini API with native Julia types, taking care of the heavy lifting for integrating your application. Currently fairly feature-sparse, but I'm building this as you read. Stay tuned!
+Provides a wrapper to the Gemini API with native Julia types, taking care of the heavy lifting for integrating your application.
 
 ## Usage
 
