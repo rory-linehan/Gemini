@@ -1,4 +1,4 @@
-# Gemini API wrapper for Julia
+# Gemini API wrapper for Julia (Unofficial)
 
 ## Overview
 
